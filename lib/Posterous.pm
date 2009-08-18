@@ -1,87 +1,86 @@
 package Posterous;
 
-use 5.008008;
+use 5.010;
 use strict;
 use warnings;
 
-require Exporter;
-use AutoLoader qw(AUTOLOAD);
+use LWP::UserAgent;
+use HTTP::Request;
+use MIME::Base64;
+use Data::Dumper;
+use Rubyish::Attribute;
 
-our @ISA = qw(Exporter);
-
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
-
-# This allows declaration	use Posterous ':all';
-# If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
-# will save memory.
-our %EXPORT_TAGS = ( 'all' => [ qw(
-	
-) ] );
-
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
-
-our @EXPORT = qw(
-	
-);
 
 our $VERSION = '0.01';
 
+our $DOMAIN = "posterous.com";
 
-# Preloaded methods go here.
+our $AUTH_PATH = "/api/getsites";
+our $NEWPOST_PATH = "/api/newpost";
+our $COMMMENT_PATH = "/api/newcomment";
+our $READPOST_PATH = "/api/readposts";
 
-# Autoload methods go after =cut, and are processed by the autosplit program.
+our $UA = LWP::UserAgent->new();
+
+attr_accessor "user", "pass";
+
+sub new {
+  my ($class, $user, $pass, $site_id) = @_;
+  my $self = bless {}, $class;
+  $self->user($user)->pass($pass);
+  $self;
+}
+
+sub auth_key {
+  my ($self) = @_;
+  state $auth_key;
+  $auth_key //= encode_base64($self->user.":".$self->pass);
+  $auth_key;
+}
+
+sub account_info {
+  my ($self) = @_;
+}
 
 1;
 __END__
-# Below is stub documentation for your module. You'd better edit it!
 
 =head1 NAME
 
-Posterous - Perl extension for blah blah blah
+Posterous - API to posterous.com
 
 =head1 SYNOPSIS
 
   use Posterous;
-  blah blah blah
 
 =head1 DESCRIPTION
 
-Stub documentation for Posterous, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
 
 =head2 EXPORT
 
-None by default.
 
 
 
 =head1 SEE ALSO
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
+Official API detail
 
-If you have a mailing list set up for your module, mention it here.
+  http://posterous.com/api
 
-If you have a web site set up for your module, mention it here.
+Posterous API Ruby version
+
+  https://rubyforge.org/projects/posterous/
+
+  http://github.com/jordandobson/Posterous/tree/master
 
 =head1 AUTHOR
 
-許 家瑋, E<lt>shelling@apple.comE<gt>
+shelling, E<lt>shelling@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2009 by 許 家瑋
+Copyright (C) 2009 by shelling
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.8 or,
-at your option, any later version of Perl 5 you may have available.
-
+Release under MIT (X11) Lincence
 
 =cut
