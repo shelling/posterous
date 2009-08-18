@@ -5,7 +5,7 @@
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test::More tests => 1;
+use Test::More 'no_plan';
 BEGIN { use_ok('Posterous') };
 
 #########################
