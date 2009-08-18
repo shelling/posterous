@@ -7,18 +7,18 @@ use warnings;
 use LWP::UserAgent;
 use HTTP::Request;
 use MIME::Base64;
-use Data::Dumper;
 use Rubyish::Attribute;
+use Data::Dumper;
 
 
 our $VERSION = '0.01';
 
-our $DOMAIN = "posterous.com";
+our $DOMAIN = "http://posterous.com";
 
-our $AUTH_PATH = "/api/getsites";
-our $NEWPOST_PATH = "/api/newpost";
-our $COMMMENT_PATH = "/api/newcomment";
-our $READPOST_PATH = "/api/readposts";
+our $AUTH_PATH = $DOMAIN."/api/getsites";
+our $NEWPOST_PATH = $DOMAIN."/api/newpost";
+our $COMMMENT_PATH = $DOMAIN."/api/newcomment";
+our $READPOST_PATH = $DOMAIN."/api/readposts";
 
 our $UA = LWP::UserAgent->new();
 
@@ -26,6 +26,7 @@ attr_accessor "user", "pass";
 
 sub new {
   my ($class, $user, $pass, $site_id) = @_;
+  die "didn\'t give user\' email or password" unless defined($user) && defined($pass);
   my $self = bless {}, $class;
   $self->user($user)->pass($pass);
   $self;
@@ -40,6 +41,9 @@ sub auth_key {
 
 sub account_info {
   my ($self) = @_;
+  my $request = HTTP::Request->new( GET => $AUTH_PATH );
+  $request->header( Authorization => "Basic ". $self->auth_key );
+  my $content = $UA->request($request)->content;
 }
 
 1;
