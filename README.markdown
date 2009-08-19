@@ -1,5 +1,7 @@
 # Posterous
 
+Posterous.com API in Perl.
+
 
 ## INSTALLATION
 
@@ -12,11 +14,13 @@ To install this module type the following:
 
 ## DEPENDENCIES
 
-    LWP
-    HTTP::Request;
-    MIME::Base64;
-    Data::Dumper;
-    Rubyish::Attribute;
+    LWP::UserAgent
+    HTTP::Request
+    MIME::Base64
+    Data::Dumper
+    Rubyish::Attribute
+    XML::Simple
+
 
 
 ## COPYRIGHT AND LICENCE
