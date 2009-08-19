@@ -63,10 +63,23 @@ Posterous - API to posterous.com
 
 =head1 DESCRIPTION
 
+=head1 Class Method
+
+=head2 new($user_mail, $pass, $site_id)
+
+  constructor, $user_mail and $pass are required.
+
+=head1 Instance Method
+
+=head2 auth_key()
+
+  return Base64 encoded "$user_mail:$pass" for Basic HTTP Authentication
+
+=head2 account_info()
+
+  GET /api/getsites, return a list of all sites owned by specified user
 
 =head2 EXPORT
-
-
 
 
 =head1 SEE ALSO
