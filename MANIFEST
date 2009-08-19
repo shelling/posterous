@@ -1,8 +1,8 @@
 Changes
-Makefile.PL
-MANIFEST
-README
 examples/auth.pl
-t/Posterous.t
-t/simple.t
+examples/read_posts.pl
 lib/Posterous.pm
+MANIFEST
+t/Posterous.t
+t/protected_methods.t
+t/simple.t

@@ -15,5 +15,5 @@ WriteMakefile(
           'XML::Simple'           => 0,
     }, 
     AUTHOR            => 'shelling <shelling@cpan.org>',
-    clean             => { FILES => "Posterous-*" },
+    clean             => { FILES => "Posterous-* MANIFEST.bak" },
 );
