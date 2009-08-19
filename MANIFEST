@@ -2,5 +2,7 @@ Changes
 Makefile.PL
 MANIFEST
 README
+examples/auth.pl
 t/Posterous.t
+t/simple.t
 lib/Posterous.pm
