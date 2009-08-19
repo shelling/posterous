@@ -1,9 +1,9 @@
 blib*
 pm_to_blib
-Makefile
+Makefile$
 Makefile.old
-Posterous-*.tar.gz
-README
+^Posterous*
+README.markdown
 MANIFEST.bak
 .DS_Store
 .git
