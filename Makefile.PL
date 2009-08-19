@@ -4,9 +4,16 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     NAME              => 'Posterous',
-    VERSION_FROM      => 'lib/Posterous.pm', # finds $VERSION
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
-    ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM  => 'lib/Posterous.pm', # retrieve abstract from module
-       AUTHOR         => '許 家瑋 <shelling@apple.com>') : ()),
+    VERSION_FROM      => 'lib/Posterous.pm',
+    ABSTRACT_FROM     => 'lib/Posterous.pm',
+    PREREQ_PM         => {
+          'LWP::UserAgent'        => 0,
+          'HTTP::Request'         => 0,
+          'Rubyish::Attribute'    => 0,
+          'MIME::Base64'          => 0,
+          'Attribute::Protected'  => 0,
+          'XML::Simple'           => 0,
+    }, 
+    AUTHOR            => 'shelling <shelling@cpan.org>',
+    clean             => { FILES => "Posterous-*" },
 );
