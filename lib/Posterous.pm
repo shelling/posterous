@@ -4,14 +4,16 @@ use 5.010;
 use strict;
 use warnings;
 
+our $VERSION = '0.01';
+
 use LWP::UserAgent;
 use HTTP::Request;
 use MIME::Base64;
 use Rubyish::Attribute;
 use Data::Dumper;
+use Attribute::Protected;
+use XML::Simple;
 
-
-our $VERSION = '0.01';
 
 our $DOMAIN = "http://posterous.com";
 
@@ -44,7 +46,9 @@ sub account_info {
   my $request = HTTP::Request->new( GET => $AUTH_PATH );
   $request->header( Authorization => "Basic ". $self->auth_key );
   my $content = $UA->request($request)->content;
+  XMLin($content);
 }
+
 
 1;
 __END__

@@ -11,6 +11,5 @@ $config = LoadFile("$ENV{HOME}/.posterous");
 
 $posterous = Posterous->new($config->{core}->{user}, $config->{core}->{pass});
 
-say Dumper($posterous);
+say Dumper $posterous->account_info;
 
-say $posterous->account_info;
