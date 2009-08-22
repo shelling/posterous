@@ -44,10 +44,15 @@ sub auth_key : Public {
 
 sub account_info : Public {
   my ($self) = @_;
-  my $request = HTTP::Request->new( GET => $AUTH_PATH );
-  $request->header( Authorization => "Basic ". $self->auth_key );
-  my $content = $UA->request($request)->content;
-  XMLin($content);
+  state $account_info;
+  if (defined $account_info) {
+    $account_info;
+  } else {
+    my $request = HTTP::Request->new( GET => $AUTH_PATH );
+    $request->header( Authorization => "Basic ". $self->auth_key );
+    my $content = $UA->request($request)->content;
+    $account_info = XMLin($content);
+  }
 }
 
 sub read_posts : Public {
@@ -64,6 +69,19 @@ sub read_public_posts : Public {
   die "no site_id or hostname is given" unless exists($options{site_id}) or exists($options{hostname});
   my $request = HTTP::Request->new( GET => $READPOST_PATH . options2query(%options) );
   XMLin($UA->request($request)->content);
+}
+
+sub primary_site : Public {
+  my ($self) = @_;
+  state $primary_site;
+  while ( my ($key, $value) = each %{ $self->account_info->{site} } ) {
+    $primary_site = $value->{id} if $value->{primary} eq "true"
+  }
+  $primary_site;
+}
+
+sub add_post : Public {
+
 }
 
 sub options2query : Protected {
@@ -136,6 +154,11 @@ Since, site_id or hostname should be specified in %options.
 Available %options key is the same as read_posts()
 
 return a list of public posts.
+
+
+=head2 primary_site()
+
+return user's primay site id
 
 
 =head1 SEE ALSO
