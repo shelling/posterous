@@ -2,6 +2,9 @@ use 5.008008;
 use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
+
+$MIN_PERL_VERSION = '5.010';
+
 WriteMakefile(
     NAME              => 'Posterous',
     VERSION_FROM      => 'lib/Posterous.pm',
