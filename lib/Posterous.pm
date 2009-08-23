@@ -100,6 +100,8 @@ sub options2query : Protected {
 
 package HTTP::Request;
 
+# authorization_basic($user, $pass) is another way,
+# but basic_auth($auth_key) reutrn request object itself.
 sub basic_auth {
   my ($self, $key) = @_;
   $self->header(Authorization => "Basic $key");
