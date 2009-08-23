@@ -45,19 +45,16 @@ sub auth_key : Public {
 sub account_info : Public {
   my ($self) = @_;
   state $account_info;
-  $account_info //= XMLin( 
-    $UA->request( 
+  $account_info //= $UA->request( 
       HTTP::Request->new( GET => $AUTH_PATH )->basic_auth($self->auth_key) 
-    )->content 
-  );
+    )->xmlize_content;
   $account_info;
 }
 
 sub read_posts : Public {
   my ($self, %options) = @_;
   my $request = HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) )->basic_auth($self->auth_key);
-  my $content = $UA->request($request)->content;
-  XMLin($content);
+  $UA->request($request)->xmlize_content;
 }
 
 sub read_public_posts : Public {
@@ -65,7 +62,7 @@ sub read_public_posts : Public {
   $options{site_id} = $self->site_id unless exists($options{site_id});
   die "no site_id or hostname is given" unless exists($options{site_id}) or exists($options{hostname});
   my $request = HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) );
-  XMLin($UA->request($request)->content);
+  $UA->request($request)->xmlize_content;
 }
 
 sub primary_site : Public {
@@ -81,14 +78,14 @@ sub add_post : Public {
   my ($self, %options) = @_;
   my $request = HTTP::Request->new( POST => $NEWPOST_PATH )->basic_auth($self->auth_key);
   $request->content(options2query(%options));
-  XMLin($UA->request($request)->content);
+  $UA->request($request)->xmlize_content;
 }
 
 sub add_comment :Public {
   my ($self, %options) = @_;
   my $request = HTTP::Request->new( POST => $COMMMENT_PATH )->basic_auth($self->auth_key);
   $request->content(options2query(%options));
-  XMLin($UA->request($request)->content);
+  $UA->request($request)->xmlize_content;
 }
 
 sub options2query : Protected {
@@ -97,6 +94,7 @@ sub options2query : Protected {
   while ( my ($key,$value) = each %options) {
     $query .= "$key=$value&";
   }
+  $query //= " ";         # avoid warning $query was not initialized
   $query =~ s/&$//g;
   $query;
 }
@@ -107,6 +105,14 @@ sub basic_auth {
   my ($self, $key) = @_;
   $self->header(Authorization => "Basic $key");
   $self;
+}
+
+package HTTP::Response;
+use XML::Simple;
+
+sub xmlize_content {
+  my ($self) = @_;
+  XMLin($self->content);
 }
 
 1;
