@@ -1,9 +1,0 @@
-Changes
-examples/auth.pl
-examples/read_posts.pl
-lib/Posterous.pm
-Makefile.PL
-MANIFEST			This list of files
-t/Posterous.t
-t/protected_methods.t
-t/simple.t

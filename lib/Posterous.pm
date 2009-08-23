@@ -49,7 +49,6 @@ sub account_info : Public {
     $account_info;
   } else {
     my $request = HTTP::Request->new( GET => $AUTH_PATH )->basic_auth($self->auth_key);
-    # $request->header( Authorization => "Basic ". $self->auth_key );
     my $content = $UA->request($request)->content;
     $account_info = XMLin($content);
   }
@@ -58,7 +57,6 @@ sub account_info : Public {
 sub read_posts : Public {
   my ($self, %options) = @_;
   my $request = HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) )->basic_auth($self->auth_key);
-  # $request->header( Authorization => "Basic ". $self->auth_key );
   my $content = $UA->request($request)->content;
   XMLin($content);
 }
