@@ -1,5 +1,6 @@
-use 5.008008;
+use 5.010;
 use ExtUtils::MakeMaker;
+use MIME::Base64;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 WriteMakefile(
@@ -19,3 +20,10 @@ WriteMakefile(
     AUTHOR            => 'shelling <shelling@cpan.org>',
     clean             => { FILES => "Posterous-* MANIFEST.bak MANIFEST" },
 );
+
+say "Please enter your account data for testing. Remark! it will use it to do some HTTP POST!";
+print "mail: "; chomp(my $mail = <>);
+print "pass: "; chomp(my $pass = <>);
+open TEMP_AUTH_FILE, " > /tmp/.posterous";
+print TEMP_AUTH_FILE encode_base64 $mail;
+print TEMP_AUTH_FILE encode_base64 $pass;

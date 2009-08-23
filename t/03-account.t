@@ -3,12 +3,13 @@ use lib qw(lib);
 
 use Posterous;
 use Test::More 'no_plan';
+use MIME::Base64;
 
-use YAML qw(LoadFile);
+open FILE, " < /tmp/.posterous";
+$user = decode_base64 <FILE>;
+$pass = decode_base64 <FILE>;
 
-$config = LoadFile("$ENV{HOME}/.posterous");
-
-$posterous = Posterous->new($config->{core}->{user}, $config->{core}->{pass});
+$posterous = Posterous->new($user, $pass);
 
 is $posterous->account_info->{stat}, "ok", "read account info failed";
 is $posterous->read_posts->{stat}, "ok", "read posts failed";
