@@ -45,8 +45,8 @@ sub account_info : Public {
   my ($self) = @_;
   state $account_info;
   $account_info //= $UA->request( 
-      HTTP::Request->new( GET => $AUTH_PATH )->basic_auth($self->auth_key) 
-    )->xmlize_content;
+    HTTP::Request->new( GET => $AUTH_PATH )->basic_auth($self->auth_key) 
+  )->xmlize_content;
   $account_info;
 }
 
