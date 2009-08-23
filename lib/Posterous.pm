@@ -57,7 +57,7 @@ sub account_info : Public {
 
 sub read_posts : Public {
   my ($self, %options) = @_;
-  my $request = HTTP::Request->new( GET => $READPOST_PATH . options2query(%options) )->basic_auth($self->auth_key);
+  my $request = HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) )->basic_auth($self->auth_key);
   # $request->header( Authorization => "Basic ". $self->auth_key );
   my $content = $UA->request($request)->content;
   XMLin($content);
@@ -67,7 +67,7 @@ sub read_public_posts : Public {
   my ($self, %options) = @_;
   $options{site_id} = $self->site_id unless exists($options{site_id});
   die "no site_id or hostname is given" unless exists($options{site_id}) or exists($options{hostname});
-  my $request = HTTP::Request->new( GET => $READPOST_PATH . options2query(%options) );
+  my $request = HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) );
   XMLin($UA->request($request)->content);
 }
 
@@ -82,34 +82,25 @@ sub primary_site : Public {
 
 sub add_post : Public {
   my ($self, %options) = @_;
-  my $query;
-  for (qw(site_id media title body autopost private data tags source sourceLink)) {
-    $query .= "$_=$options{$_}&" if exists $options{$_};
-  }
-  $query =~ s/&$//;
   my $request = HTTP::Request->new( POST => $NEWPOST_PATH )->basic_auth($self->auth_key);
-  $request->content($query);
+  $request->content(options2query(%options));
   XMLin($UA->request($request)->content);
 }
 
 sub add_comment :Public {
   my ($self, %options) = @_;
-  my $query;
-  for (qw(post_id comment)) {
-    $query .= "$_=$options{$_}&" if exists $options{$_};
-  }
-  $query =~ s/&$//;
   my $request = HTTP::Request->new( POST => $COMMMENT_PATH )->basic_auth($self->auth_key);
-  $request->content($query);
+  $request->content(options2query(%options));
   XMLin($UA->request($request)->content);
 }
 
 sub options2query : Protected {
   my (%options) = @_;
-  my $query = "?";
+  my $query;
   while ( my ($key,$value) = each %options) {
-    $query .= "$key=$value";
+    $query .= "$key=$value&";
   }
+  $query =~ s/&$//g;
   $query;
 }
 
@@ -187,7 +178,14 @@ return a list of public posts.
 
 POST /api/newpost, return post callback.
 
-Available %options key include site_id, media, title, body, autopost, private, data, tags, source, sourceLink
+Available %options key include site_id, media, title, body, autopost, private, data, tags, source, sourceLink.
+
+
+=head2 add_comment(%options)
+
+POST /api/newcomment, return comment callback.
+
+Available %options key include post_id, comment.
 
 
 =head2 primary_site()
