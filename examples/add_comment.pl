@@ -11,4 +11,4 @@ $config = LoadFile("$ENV{HOME}/.posterous");
 
 $posterous = Posterous->new($config->{core}->{user}, $config->{core}->{pass});
 
-say Dumper $posterous->add_post(title => "Posterous.pm example", body => "Posterous.pm example body");
+say Dumper $posterous->add_comment(post_id => 2441422, comment => "posterous add_comment() example");

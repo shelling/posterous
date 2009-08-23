@@ -92,6 +92,18 @@ sub add_post : Public {
   XMLin($UA->request($request)->content);
 }
 
+sub add_comment :Public {
+  my ($self, %options) = @_;
+  my $query;
+  for (qw(post_id comment)) {
+    $query .= "$_=$options{$_}&" if exists $options{$_};
+  }
+  $query =~ s/&$//;
+  my $request = HTTP::Request->new( POST => $COMMMENT_PATH )->basic_auth($self->auth_key);
+  $request->content($query);
+  XMLin($UA->request($request)->content);
+}
+
 sub options2query : Protected {
   my (%options) = @_;
   my $query = "?";

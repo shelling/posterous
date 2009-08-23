@@ -23,3 +23,7 @@ while(my ($key, $value) = each %{$posterous->account_info->{site}}) {
 is $posterous->primary_site, $primary_site_id, $posterous->primary_site . " not eq $primary_site_id";
 
 is $posterous->add_post(title => "posterous.pm test", body => "posterous.pm test body")->{stat}, "ok", "add_post() failed";
+
+my $post_id = $posterous->add_post(title => "test add_comment()", body => "test body")->{post}->{id};
+
+is $posterous->add_comment(post_id => $post_id, comment => "posterous.pm comment test")->{stat}, "ok", "add_comment() failed";
