@@ -45,13 +45,12 @@ sub auth_key : Public {
 sub account_info : Public {
   my ($self) = @_;
   state $account_info;
-  if (defined $account_info) {
-    $account_info;
-  } else {
-    my $request = HTTP::Request->new( GET => $AUTH_PATH )->basic_auth($self->auth_key);
-    my $content = $UA->request($request)->content;
-    $account_info = XMLin($content);
-  }
+  $account_info //= XMLin( 
+    $UA->request( 
+      HTTP::Request->new( GET => $AUTH_PATH )->basic_auth($self->auth_key) 
+    )->content 
+  );
+  $account_info;
 }
 
 sub read_posts : Public {
