@@ -48,8 +48,8 @@ sub account_info : Public {
   if (defined $account_info) {
     $account_info;
   } else {
-    my $request = HTTP::Request->new( GET => $AUTH_PATH );
-    $request->header( Authorization => "Basic ". $self->auth_key );
+    my $request = HTTP::Request->new( GET => $AUTH_PATH )->basic_auth($self->auth_key);
+    # $request->header( Authorization => "Basic ". $self->auth_key );
     my $content = $UA->request($request)->content;
     $account_info = XMLin($content);
   }
@@ -57,8 +57,8 @@ sub account_info : Public {
 
 sub read_posts : Public {
   my ($self, %options) = @_;
-  my $request = HTTP::Request->new( GET => $READPOST_PATH . options2query(%options) );
-  $request->header( Authorization => "Basic ". $self->auth_key );
+  my $request = HTTP::Request->new( GET => $READPOST_PATH . options2query(%options) )->basic_auth($self->auth_key);
+  # $request->header( Authorization => "Basic ". $self->auth_key );
   my $content = $UA->request($request)->content;
   XMLin($content);
 }
@@ -81,7 +81,15 @@ sub primary_site : Public {
 }
 
 sub add_post : Public {
-
+  my ($self, %options) = @_;
+  my $query;
+  for (qw(site_id media title body autopost private data tags source sourceLink)) {
+    $query .= "$_=$options{$_}&" if exists $options{$_};
+  }
+  $query =~ s/&$//;
+  my $request = HTTP::Request->new( POST => $NEWPOST_PATH )->basic_auth($self->auth_key);
+  $request->content($query);
+  XMLin($UA->request($request)->content);
 }
 
 sub options2query : Protected {
@@ -93,6 +101,13 @@ sub options2query : Protected {
   $query;
 }
 
+package HTTP::Request;
+
+sub basic_auth {
+  my ($self, $key) = @_;
+  $self->header(Authorization => "Basic $key");
+  $self;
+}
 
 1;
 __END__
@@ -154,6 +169,13 @@ Since, site_id or hostname should be specified in %options.
 Available %options key is the same as read_posts()
 
 return a list of public posts.
+
+
+=head2 add_post(%options)
+
+POST /api/newpost, return post callback.
+
+Available %options key include site_id, media, title, body, autopost, private, data, tags, source, sourceLink
 
 
 =head2 primary_site()
