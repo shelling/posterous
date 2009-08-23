@@ -12,7 +12,6 @@ use MIME::Base64;
 use Rubyish::Attribute;
 use Data::Dumper;
 use Attribute::Protected;
-use XML::Simple;
 
 
 our $DOMAIN = "http://posterous.com";
@@ -125,6 +124,12 @@ Posterous - API to posterous.com
 =head1 SYNOPSIS
 
   use Posterous;
+
+  $posterous = Posterous->new($user, $pass, $site_id);
+
+  $posterous->account_info;     # list all sites owned by $user
+
+  $posterous->add_post( title => "hello posterous", body => "Post through Posterous.pm" );
 
 =head1 DESCRIPTION
 
