@@ -47,7 +47,7 @@ sub account_info : Public {
   $account_info //= HTTP::Request->new( GET => $AUTH_PATH )
                                  ->basic_auth($self->auth_key)
                                  ->submit_by($UA)
-                                 ->xmlize_content;
+                                 ->xmlized_content;
   $account_info;
 }
 
@@ -56,7 +56,7 @@ sub read_posts : Public {
   HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) )
                ->basic_auth($self->auth_key)
                ->submit_by($UA)
-               ->xmlize_content;
+               ->xmlized_content;
 }
 
 sub read_public_posts : Public {
@@ -65,7 +65,7 @@ sub read_public_posts : Public {
   die "no site_id or hostname is given" unless exists($options{site_id}) or exists($options{hostname});
   HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) )
                ->submit_by($UA)
-               ->xmlize_content;
+               ->xmlized_content;
 }
 
 sub primary_site : Public {
@@ -81,14 +81,14 @@ sub add_post : Public {
   my ($self, %options) = @_;
   my $request = HTTP::Request->new( POST => $NEWPOST_PATH )->basic_auth($self->auth_key);
   $request->content(options2query(%options));
-  $UA->request($request)->xmlize_content;
+  $UA->request($request)->xmlized_content;
 }
 
 sub add_comment :Public {
   my ($self, %options) = @_;
   my $request = HTTP::Request->new( POST => $COMMMENT_PATH )->basic_auth($self->auth_key);
   $request->content(options2query(%options));
-  $UA->request($request)->xmlize_content;
+  $UA->request($request)->xmlized_content;
 }
 
 sub options2query : Protected {
@@ -120,7 +120,7 @@ sub submit_by {
 package HTTP::Response;
 use XML::Simple;
 
-sub xmlize_content {
+sub xmlized_content {
   my ($self) = @_;
   XMLin($self->content);
 }
