@@ -22,8 +22,8 @@ WriteMakefile(
 );
 
 say "Please enter your account data for testing. Remark! it will use it to do some HTTP POST!";
-print "mail: "; chomp(my $mail = <>);
-print "pass: "; chomp(my $pass = <>);
+print "mail: "; chomp(my $mail = <STDIN>);
+print "pass: "; chomp(my $pass = <STDIN>);
 open TEMP_AUTH_FILE, " > /tmp/.posterous";
 print TEMP_AUTH_FILE encode_base64 $mail;
 print TEMP_AUTH_FILE encode_base64 $pass;
