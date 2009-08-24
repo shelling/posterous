@@ -44,24 +44,28 @@ sub auth_key : Public {
 sub account_info : Public {
   my ($self) = @_;
   state $account_info;
-  $account_info //= $UA->request( 
-    HTTP::Request->new( GET => $AUTH_PATH )->basic_auth($self->auth_key) 
-  )->xmlize_content;
+  $account_info //= HTTP::Request->new( GET => $AUTH_PATH )
+                                 ->basic_auth($self->auth_key)
+                                 ->submit_by($UA)
+                                 ->xmlize_content;
   $account_info;
 }
 
 sub read_posts : Public {
   my ($self, %options) = @_;
-  my $request = HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) )->basic_auth($self->auth_key);
-  $UA->request($request)->xmlize_content;
+  HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) )
+               ->basic_auth($self->auth_key)
+               ->submit_by($UA)
+               ->xmlize_content;
 }
 
 sub read_public_posts : Public {
   my ($self, %options) = @_;
   $options{site_id} = $self->site_id unless exists($options{site_id});
   die "no site_id or hostname is given" unless exists($options{site_id}) or exists($options{hostname});
-  my $request = HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) );
-  $UA->request($request)->xmlize_content;
+  HTTP::Request->new( GET => $READPOST_PATH . "?" . options2query(%options) )
+               ->submit_by($UA)
+               ->xmlize_content;
 }
 
 sub primary_site : Public {
@@ -106,6 +110,11 @@ sub basic_auth {
   my ($self, $key) = @_;
   $self->header(Authorization => "Basic $key");
   $self;
+}
+
+sub submit_by {
+  my ($self, $ua) = @_;
+  $ua->request($self);
 }
 
 package HTTP::Response;
