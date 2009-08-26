@@ -1,6 +1,7 @@
 use 5.010;
 use ExtUtils::MakeMaker;
 use MIME::Base64;
+use Storable;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 WriteMakefile(
@@ -22,8 +23,6 @@ WriteMakefile(
 );
 
 say "Please enter your account data for testing. Remark! it will use it to do some HTTP POST!";
-print "mail: "; chomp(my $mail = <STDIN>);
-print "pass: "; chomp(my $pass = <STDIN>);
-open TEMP_AUTH_FILE, " > /tmp/.posterous";
-print TEMP_AUTH_FILE encode_base64 $mail;
-print TEMP_AUTH_FILE encode_base64 $pass;
+$mail = prompt("mail:");
+$pass = prompt("pass:");
+store([encode_base64($mail), encode_base64($pass)], "/tmp/.posterous");
