@@ -4,10 +4,10 @@ use lib qw(lib);
 use Posterous;
 use Test::More 'no_plan';
 use MIME::Base64;
+use Storable;
+use Data::Dumper;
 
-open FILE, " < /tmp/.posterous";
-$user = decode_base64 <FILE>;
-$pass = decode_base64 <FILE>;
+($user, $pass) = map { decode_base64 $_ } @{ retrieve("/tmp/.posterous") };
 
 $posterous = Posterous->new($user, $pass);
 

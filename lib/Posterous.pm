@@ -23,14 +23,17 @@ our $READPOST_PATH = $DOMAIN."/api/readposts";
 
 our $UA = LWP::UserAgent->new();
 
-attr_accessor "user", "pass", "site_id";
+BEGIN {
+  attr_accessor "user", "pass", "site_id";
+}
 
 sub new {
   my ($class, $user, $pass, $site_id) = @_;
   die "didn\'t give user\' email or password" unless defined($user) && defined($pass);
   my $self = bless {}, $class;
-  $self->user($user)->pass($pass);
-  $self->site_id($site_id) if $site_id;
+  __user__ = $user;
+  __pass__ = $pass;
+  __site_id__ = $site_id if $site_id;
   $self;
 }
 

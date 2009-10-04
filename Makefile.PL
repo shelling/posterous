@@ -13,7 +13,7 @@ WriteMakefile(
     PREREQ_PM         => {
           'LWP::UserAgent'        => 0,
           'HTTP::Request'         => 0,
-          'Rubyish::Attribute'    => 0,
+          'Rubyish::Attribute'    => 1.1,
           'MIME::Base64'          => 0,
           'Attribute::Protected'  => 0,
           'XML::Simple'           => 0,
